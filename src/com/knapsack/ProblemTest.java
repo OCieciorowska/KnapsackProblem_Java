@@ -9,6 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ProblemTest {
 
+    /**
+     * Test sprawdza, czy jeśli istnieje przynajmniej jeden przedmiot,
+     * który mieści się do plecaka, to wynik zawiera co najmniej jeden taki przedmiot.
+     */
     @Test
     public void testReturnsAtLeastOneItemIfFits() {
         // co najmniej jeden przedmiot pasuje do plecaka
@@ -20,6 +24,10 @@ public class ProblemTest {
         assertTrue(totalQuantity > 0, "Powinien zostać wybrany co najmniej jeden przedmiot");
     }
 
+    /**
+     * Test sprawdza, czy jeśli żaden przedmiot nie spełnia ograniczenia wagowego,
+     * to rozwiązanie jest puste (żaden przedmiot nie został wybrany).
+     */
     @Test
     public void testReturnsEmptyIfNothingFits() {
         // żaden przedmiot nie mieści się do plecaka
@@ -32,7 +40,10 @@ public class ProblemTest {
         assertEquals(0, result.getTotalWeight(), "Całkowita waga powinna wynosić 0");
         assertEquals(0, result.getTotalValue(), "Całkowita wartość powinna wynosić 0");
     }
-
+    /**
+     * Test sprawdza, czy wartości i wagi wszystkich wygenerowanych przedmiotów
+     * mieszczą się w zadanym przedziale (lowerBound, upperBound).
+     */
     @Test
     public void testItemGenerationWithinBounds() {
         // sprawdzenie zakresu wartości i wag
@@ -54,6 +65,10 @@ public class ProblemTest {
         }
     }
 
+    /**
+     * Test sprawdza poprawność działania algorytmu dla konkretnej instancji danych.
+     * Ręcznie tworzymy prosty przypadek i porównujemy oczekiwane wyniki z rzeczywistymi.
+     */
     @Test
     public void testCorrectnessOfKnownSolution() {
         // test deterministyczny z konkretnym seedem
