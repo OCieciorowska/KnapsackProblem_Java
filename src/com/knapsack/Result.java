@@ -5,13 +5,11 @@ import java.util.List;
 
 public class Result {
     private List<Integer> itemNumbers;
-    private List<Integer> quantities;
     private int totalValue;
     private int totalWeight;
 
-    public Result(List<Integer> itemNumbers, List<Integer> quantities, int totalValue, int totalWeight) {
+    public Result(List<Integer> itemNumbers, int totalValue, int totalWeight) {
         this.itemNumbers = new ArrayList<>(itemNumbers);
-        this.quantities = new ArrayList<>(quantities);
         this.totalValue = totalValue;
         this.totalWeight = totalWeight;
     }
@@ -22,10 +20,8 @@ public class Result {
         sb.append("Solution:\n");
         sb.append("Items in knapsack:\n");
 
-        for (int i = 0; i < itemNumbers.size(); i++) {
-            sb.append("Item ").append(itemNumbers.get(i) + 1)  // 👈 dodano +1
-                    .append(": Quantity=").append(quantities.get(i))
-                    .append("\n");
+        for (int itemNumber : itemNumbers) {
+            sb.append("Item ").append(itemNumber+1).append("\n");
         }
 
         sb.append("Total value: ").append(totalValue).append("\n");
@@ -35,7 +31,6 @@ public class Result {
     }
 
     public List<Integer> getItemNumbers() { return itemNumbers; }
-    public List<Integer> getQuantities() { return quantities; }
     public int getTotalValue() { return totalValue; }
     public int getTotalWeight() { return totalWeight; }
 }

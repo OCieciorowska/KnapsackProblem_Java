@@ -5,50 +5,45 @@ import java.util.*;
 public class Problem {
     private int numberOfItems;
     private int seed;
-    private int lowerBound;
+    private int lowerBound;//granice wartosci i wagi przedmiotow
     private int upperBound;
-    private List<Item> items;
+    private List<Item> items;//lista przedmiotow
 
     public Problem(int numberOfItems, int seed, int lowerBound, int upperBound) {
         this.numberOfItems = numberOfItems;
         this.seed = seed;
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
-        this.items = generateItems();
+        this.items = generateItems();//generator losowy
     }
 
     public Result solve(int capacity) {
-        List<ItemWithIndex> sortedItems = new ArrayList<>();
+        // Tworzymy listę pomocniczą z przedmiotami i ich oryginalnymi indeksami
+        List<ItemWithIndex> indexedItems = new ArrayList<>();
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             double ratio = (double) item.getValue() / item.getWeight();
-            sortedItems.add(new ItemWithIndex(i, item, ratio));
+            indexedItems.add(new ItemWithIndex(i, item, ratio));
         }
 
-        sortedItems.sort((a, b) -> Double.compare(b.ratio, a.ratio));
+        // Sortujemy według stosunku wartości do wagi malejąco
+        indexedItems.sort((a, b) -> Double.compare(b.ratio, a.ratio));
 
         List<Integer> selectedItemNumbers = new ArrayList<>();
-        List<Integer> selectedQuantities = new ArrayList<>();
-        int remainingCapacity = capacity;
         int totalValue = 0;
         int totalWeight = 0;
-
-        for (ItemWithIndex itemWithIndex : sortedItems) {
-            if (remainingCapacity <= 0) break;
-
-            Item item = itemWithIndex.item;
-            if (item.getWeight() <= remainingCapacity) {
-                int quantity = remainingCapacity / item.getWeight();
-                selectedItemNumbers.add(itemWithIndex.index);
-                selectedQuantities.add(quantity);
-                totalValue += quantity * item.getValue();
-                totalWeight += quantity * item.getWeight();
-                remainingCapacity -= quantity * item.getWeight();
+        //przechodzimy przez posortowana liczbe i jesli dodanie przedmiotu nie przekroczy pojemnosci to dodajemy
+        for (ItemWithIndex iw : indexedItems) {
+            if (totalWeight + iw.item.getWeight() <= capacity) {
+                selectedItemNumbers.add(iw.index); // dodajemy oryginalny indeks!
+                totalValue += iw.item.getValue();
+                totalWeight += iw.item.getWeight();
             }
         }
 
-        return new Result(selectedItemNumbers, selectedQuantities, totalValue, totalWeight);
+        return new Result(selectedItemNumbers, totalValue, totalWeight);
     }
+
 
     private List<Item> generateItems() {
         List<Item> items = new ArrayList<>();
@@ -64,9 +59,10 @@ public class Problem {
     }
 
     @Override
+    //generujemy string stanu problemu
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Problem instance:\n");
+        sb.append("Problem instance:\n"); //sb.append daje dane na koniec budowanego tekstu
         sb.append("Number of items: ").append(numberOfItems).append("\n");
         sb.append("Seed: ").append(seed).append("\n");
         sb.append("Bounds: [").append(lowerBound).append(", ").append(upperBound).append("]\n");
@@ -78,13 +74,13 @@ public class Problem {
                     .append(items.get(i).getWeight()).append("\n");
         }
 
-        return sb.toString();
+        return sb.toString();//aby uzyskac gotowy ciag
     }
-
+    //pomocnicza struktura przechowujaca indeksy i stosunek wagi do wartosci
     private static class ItemWithIndex {
-        int index;
-        Item item;
-        double ratio;
+        int index; //indeks przedmiotu
+        Item item; //przedmiot
+        double ratio; //stosunek wartosci do wagi
 
         ItemWithIndex(int index, Item item, double ratio) {
             this.index = index;
@@ -92,7 +88,7 @@ public class Problem {
             this.ratio = ratio;
         }
     }
-
+//getter listy przedmiotow
     public List<Item> getItems() {
         return items;
     }

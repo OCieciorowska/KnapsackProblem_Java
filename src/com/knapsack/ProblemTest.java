@@ -20,9 +20,10 @@ public class ProblemTest {
         int capacity = 10;
         Result result = problem.solve(capacity);
 
-        int totalQuantity = result.getQuantities().stream().mapToInt(Integer::intValue).sum();
-        assertTrue(totalQuantity > 0, "Powinien zostać wybrany co najmniej jeden przedmiot");
+        assertFalse(result.getItemNumbers().isEmpty(), "Powinien zostać wybrany co najmniej jeden przedmiot");
+        assertTrue(result.getTotalWeight() <= capacity, "Łączna waga nie powinna przekraczać pojemności");
     }
+
 
     /**
      * Test sprawdza, czy jeśli żaden przedmiot nie spełnia ograniczenia wagowego,
@@ -30,13 +31,11 @@ public class ProblemTest {
      */
     @Test
     public void testReturnsEmptyIfNothingFits() {
-        // żaden przedmiot nie mieści się do plecaka
-        Problem problem = new Problem(5, 42, 10, 20); // wagi co najmniej 10
-        int capacity = 5; // mniejsza niż jakakolwiek waga
+        Problem problem = new Problem(5, 42, 10, 20); // Wagi >= 10
+        int capacity = 5; // Mniejsza niż jakakolwiek waga
         Result result = problem.solve(capacity);
 
         assertTrue(result.getItemNumbers().isEmpty(), "Lista przedmiotów powinna być pusta");
-        assertTrue(result.getQuantities().isEmpty(), "Lista ilości powinna być pusta");
         assertEquals(0, result.getTotalWeight(), "Całkowita waga powinna wynosić 0");
         assertEquals(0, result.getTotalValue(), "Całkowita wartość powinna wynosić 0");
     }
@@ -71,13 +70,13 @@ public class ProblemTest {
      */
     @Test
     public void testCorrectnessOfKnownSolution() {
-        // test deterministyczny z konkretnym seedem
-        Problem problem = new Problem(3, 1, 1, 1); // wszystkie przedmioty będą miały wagę=1, wartość=1
+        // Wszystkie wartości i wagi będą równe 1
+        Problem problem = new Problem(3, 1, 1, 1);
         int capacity = 2;
-
         Result result = problem.solve(capacity);
 
         assertEquals(2, result.getTotalValue(), "Całkowita wartość powinna wynosić 2");
         assertEquals(2, result.getTotalWeight(), "Całkowita waga powinna wynosić 2");
+        assertEquals(2, result.getItemNumbers().size(), "Powinny być wybrane 2 przedmioty");
     }
 }
